@@ -8,6 +8,7 @@ import {StyledView} from "../utils/StyledComponents";
 import {StatusBar, Text, TouchableOpacity} from "react-native";
 import Login from "../components/boarding/login";
 import Register from "../components/boarding/register";
+import {CustomCarousel} from "../components/boarding/customCarousel";
 
 export default function OnboardScreen({navigation}) {
 
@@ -18,14 +19,16 @@ export default function OnboardScreen({navigation}) {
             {screen === 'boarding' ?
                 <>
                     <StatusBar backgroundColor={"#ffffff"}/>
-                    <StyledView className={'w-screen h-2/3'}></StyledView>
-                    <StyledView className={'w-screen h-1/3 p-2 pt-4 px-4'}>
+                    <StyledView className={'w-screen h-4/5'}>
+                        <CustomCarousel />
+                    </StyledView>
+                    <StyledView className={'w-screen h-1/5 p-2 px-4'}>
                         <TouchableOpacity className={'w-full flex items-center py-4 bg-customPurple rounded-xl mb-4'}
                                           onPress={()=>setScreen('register')}
                         >
                             <Text className={'text-xl text-gray-100'}>Sign up</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity className={'w-full flex items-center py-4 bg-customPurpleLight rounded-xl mb-2'}
+                        <TouchableOpacity className={'w-full flex items-center py-4 bg-customPurpleLight rounded-xl'}
                                           onPress={()=>setScreen('login')}
                         >
                             <Text className={'text-xl text-customPurple'}>Login</Text>
