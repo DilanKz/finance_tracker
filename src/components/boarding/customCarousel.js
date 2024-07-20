@@ -45,6 +45,7 @@ export function CustomCarousel() {
                 scrollAnimationDuration={1000}
                 autoPlay={true}
                 autoPlayInterval={3000}
+
             />
         </View>
     )
