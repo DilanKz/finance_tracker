@@ -3,6 +3,7 @@ import React, {useState} from "react";
 
 // ** React Native Imports
 import {Text, TextInput, TouchableOpacity, View} from "react-native";
+import {useNavigation} from "@react-navigation/native";
 
 // ** Expo Icons
 import { Ionicons } from '@expo/vector-icons';
@@ -11,17 +12,21 @@ import PasswordInput from "../inputs/passwordInput";
 
 export default function Login({setScreen}) {
 
+    const navigation = useNavigation()
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
 
     return (
         <View className={'w-screen'}>
-            <View className={'mt-16 w-full py-2 px-4 flex flex-row justify-between text-center'}>
-                <TouchableOpacity onPress={() => setScreen('boarding')}>
+            <View className={'mt-16 w-full py-2 px-4 flex flex-row text-center'}>
+                <TouchableOpacity
+                    onPress={() => setScreen('boarding')}
+                    className="absolute left-4 top-0 bottom-0 flex items-center justify-center z-10"
+                >
                     <AntDesign name="arrowleft" size={24} color="black" />
                 </TouchableOpacity>
-                <Text className={'text-xl font-bold text-black'}>Login</Text>
-                <Text className={'text-xl text-black'}></Text>
+                <Text className="text-xl font-bold text-black flex-1 text-center">Login</Text>
             </View>
 
             <View className={'w-screen py-2 px-3'}>
@@ -35,7 +40,9 @@ export default function Login({setScreen}) {
                 </View>
                 <PasswordInput value={password} onChange={setPassword} />
 
-                <TouchableOpacity className={'w-full flex items-center py-4 bg-customPurple rounded-xl mb-4'}>
+                <TouchableOpacity className={'w-full flex items-center py-4 bg-customPurple rounded-xl mb-4'}
+                                  onPress={()=>navigation.navigate('main')}
+                >
                     <Text className={'text-xl text-gray-100'}>Login</Text>
                 </TouchableOpacity>
 
