@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import {View, Text, TouchableOpacity, Platform, StyleSheet} from 'react-native';
+import {View, Text, TouchableOpacity, Platform, StyleSheet, ScrollView} from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { MaterialIcons } from '@expo/vector-icons';
+import TransactionDetailCard from "../../components/transactions/transactionDetailCard";
 
 const options = [
     { label: 'Day', value: 'Day' },
@@ -15,9 +16,9 @@ const TransactionScreen = () => {
     const [selectedValue, setSelectedValue] = useState('Month');
 
     return (
-        <View className="flex-1">
-            <View className="mt-16 w-full py-2 px-4 flex flex-row justify-between items-center">
-                <View className="border border-gray-300 rounded-full bg-white px-2 py-1">
+        <View className="flex-1 px-4 bg-white">
+            <View className="mt-16 w-full py-2 flex flex-row justify-between items-center">
+                <View className="border border-gray-200 rounded-full bg-white px-2 py-1">
                     <RNPickerSelect
                         onValueChange={(value) => setSelectedValue(value)}
                         items={options}
@@ -34,14 +35,32 @@ const TransactionScreen = () => {
                     />
                 </View>
 
-                <TouchableOpacity className="bg-white border border-gray-300 rounded-md px-2 py-1">
+                <TouchableOpacity className="bg-white border border-gray-200 rounded-md px-2 py-1">
                     <MaterialIcons name="filter-list" size={24} color="black" />
                 </TouchableOpacity>
             </View>
 
-            <View className="flex-1 bg-gray-950 justify-center items-center">
-                <Text className="text-center text-lg text-gray-800">Your Text Here</Text>
-            </View>
+            <TouchableOpacity className={'bg-violet-200 p-3 rounded-md my-3 flex-row justify-between items-center'}>
+                <Text className={'text-violet-700'}>See your financial report</Text>
+                <FontAwesome5 name="chevron-right" size={18} color={'rgb(109 40 217)'} />
+            </TouchableOpacity>
+
+            <ScrollView className="flex-1">
+                <View className="">
+                    <TransactionDetailCard
+                        title={'Today'}
+                        filter={'today'}
+                    />
+                    <TransactionDetailCard
+                        title={'Yesterday'}
+                        filter={'yesterday'}
+                    />
+                    <TransactionDetailCard
+                        title={'This Month'}
+                        filter={'month'}
+                    />
+                </View>
+            </ScrollView>
 
 
         </View>
