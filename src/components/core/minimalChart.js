@@ -65,13 +65,13 @@ const MinimalBezierLineChart = () => {
                     <Text className={`${filer === 'today' ? 'text-amber-500' : 'text-gray-400'} font-semibold text-lg`}>Today</Text>
                 </TouchableOpacity>
                 <TouchableOpacity className={`${filer === 'week' ? 'bg-amber-100' : ''} rounded-xl px-3 `} onPress={()=>setFilterValue('week')}>
-                    <Text className={`${filer === 'week' ? 'text-amber-500' : 'text-gray-400'} font-semibold text-lg`}>weak</Text>
+                    <Text className={`${filer === 'week' ? 'text-amber-500' : 'text-gray-400'} font-semibold text-lg`}>Weak</Text>
                 </TouchableOpacity>
                 <TouchableOpacity className={`${filer === 'month' ? 'bg-amber-100' : ''} rounded-xl px-3 `} onPress={()=>setFilterValue('month')}>
-                    <Text className={`${filer === 'month' ? 'text-amber-500' : 'text-gray-400'} font-semibold text-lg`}>month</Text>
+                    <Text className={`${filer === 'month' ? 'text-amber-500' : 'text-gray-400'} font-semibold text-lg`}>Month</Text>
                 </TouchableOpacity>
                 <TouchableOpacity className={`${filer === 'year' ? 'bg-amber-100' : ''} rounded-xl px-3 `} onPress={()=>setFilterValue('year')}>
-                    <Text className={`${filer === 'year' ? 'text-amber-500' : 'text-gray-400'} font-semibold text-lg`}>year</Text>
+                    <Text className={`${filer === 'year' ? 'text-amber-500' : 'text-gray-400'} font-semibold text-lg`}>Year</Text>
                 </TouchableOpacity>
             </View>
         </View>
