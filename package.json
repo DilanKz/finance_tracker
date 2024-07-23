@@ -20,6 +20,7 @@
     "nativewind": "^2.0.11",
     "react": "18.2.0",
     "react-native": "0.74.3",
+    "react-native-chart-kit": "^6.12.0",
     "react-native-modal-selector": "^2.1.2",
     "react-native-picker-select": "^9.1.3",
     "react-native-reanimated": "^3.10.1",
