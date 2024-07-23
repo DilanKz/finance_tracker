@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import { View, TouchableOpacity, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons'; // Or any other icon library you prefer
 import { FontAwesome6 } from '@expo/vector-icons';
@@ -6,12 +6,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Fontisto } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
 import { useNavigation, useRoute, useIsFocused } from '@react-navigation/native';
+import {RouteContext} from "../context/routeProvider";
 
 export default function NavigationBar() {
 
     const navigation = useNavigation();
 
-    const [route, setRoute] = useState('Home');
+    const { route, setRoute } = useContext(RouteContext);
 
     const getColor = (screenName) => {
         return route === screenName ? '#8a2be2' : 'gray';
