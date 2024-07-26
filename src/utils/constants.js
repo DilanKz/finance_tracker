@@ -80,7 +80,8 @@ const categories = [
         iconSmall: <MaterialCommunityIcons name="dots-horizontal" size={24} color="#9CA3AF" />,
         color: 'bg-gray-200',
         category: 'expense',
-        titleColor: 'text-gray-700'
+        titleColor: 'text-gray-700',
+        colorHex:'#9CA3AF',
     }
 ];
 
