@@ -16,17 +16,19 @@ export const BudgetProgressCard = (props) => {
                 elevation: 5,
                 padding:8,
             }}>
-                <View className='flex-row justify-between items-center mb-2'>
-                    <View className='flex-row items-center'>
+                <View className='flex-row justify-between items-start mb-2'>
+                    <View className='flex-row items-start'>
                         <View className={`${category.color} p-2 rounded-lg flex-row items-center justify-center mr-2`}>
                             {category.iconSmall}
                         </View>
-                        <Text className='text-lg font-semibold'>{category.title}</Text>
+                        <Text className='font-semibold'>{category.title}</Text>
                     </View>
                     <Text className='text-lg'>-</Text>
                 </View>
 
-                <Text className='text-lg mb-2'>1200/2000</Text>
+                <Text className='text-lg font-semibold mb-2'>
+                    Remaining
+                </Text>
 
                 <Progress.Bar
                     progress={100 / 120}
