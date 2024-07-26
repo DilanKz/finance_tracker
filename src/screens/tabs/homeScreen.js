@@ -1,14 +1,41 @@
-import React from 'react';
-import {ScrollView, Text, View} from 'react-native';
+import React, {useContext} from 'react';
+import {ScrollView, Text, TouchableOpacity, View, Image} from 'react-native';
 import MinimalBezierLineChart from "../../components/core/minimalChart";
-import {FontAwesome, MaterialIcons} from "@expo/vector-icons";
+import {AntDesign, FontAwesome, Ionicons, MaterialIcons} from "@expo/vector-icons";
+import {RouteContext} from "../../components/context/routeProvider";
+import {useNavigation} from "@react-navigation/native";
+import Recent from "../../components/home/recent";
 
 const HomeScreen = () => {
+
+    const navigation = useNavigation();
+
+    const { route, setRoute } = useContext(RouteContext);
+
+    const navigator = (value) => {
+        navigation.navigate(value)
+        setRoute(value)
+    }
+
     return (
         <ScrollView className="flex-1 p-4 bg-white">
 
-            <View className={'pt-16'}>
-                <Text className={'text-center font-semibold text-gray-400'}>Account Balance</Text>
+            <View className={'mt-12 w-full py-1 px-1 flex flex-row justify-between items-center'}>
+                <View className={'border p-1 rounded-full'}>
+                    <TouchableOpacity className={'flex items-center justify-center'} onPress={()=>navigator('Profile')}>
+                        <Image
+                            source={require('../../assets/favicon.png')}
+                            className={'w-10 h-10 rounded-full'}
+                        />
+                    </TouchableOpacity>
+                </View>
+                <TouchableOpacity className={'flex items-center justify-center relative'}>
+                    <FontAwesome name="bell" size={24} color="#7F39FB" />
+                </TouchableOpacity>
+            </View>
+
+            <View className={'mt-4'}>
+                <Text className={'text-center font-semibold text-gray-400 mb-2'}>Account Balance</Text>
                 <Text className={'text-center font-bold text-4xl mb-4'}>RS 12000</Text>
 
                 <View className={'flex-row justify-center gap-x-3'}>
@@ -42,6 +69,11 @@ const HomeScreen = () => {
 
             <Text className={'text-lg font-semibold mt-8'}>Spend Frequency</Text>
             <MinimalBezierLineChart/>
+
+            <View className={'mt-8 mb-4'}>
+                <Recent navigate={()=>navigator('Transaction')} />
+            </View>
+
         </ScrollView>
     );
 };
