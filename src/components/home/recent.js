@@ -1,6 +1,8 @@
 import {Text, TouchableOpacity, View} from "react-native";
 import TransactionCard from "../transactions/transactionCard";
 
+const arr = ['Shopping', 'Food', 'Travel', 'Health']
+
 const Recent = (props) => {
 
     return (
@@ -12,9 +14,9 @@ const Recent = (props) => {
                 </TouchableOpacity>
             </View>
 
-            <TransactionCard />
-            <TransactionCard />
-            <TransactionCard />
+            {arr.map((name,index) => (
+                <TransactionCard key={index} title={name} />
+            ))}
         </View>
     )
 }
