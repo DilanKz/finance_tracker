@@ -28,7 +28,7 @@ export default function MainScreen () {
                     <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="Transaction" component={TransactionScreen} options={{ headerShown: false }} />
                     <Stack.Screen name="Budget" component={BudgetScreen} options={{ headerShown: false }} />
-                    <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
+                    <Stack.Screen name="Settings" component={ProfileScreen} options={{ headerShown: false }} />
                 </Stack.Navigator>
                 <NavigationBar />
             </View>
