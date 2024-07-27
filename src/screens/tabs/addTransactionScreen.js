@@ -34,6 +34,17 @@ const AddTransactionScreen = ({ route }) => {
         setAmount(numericValue);
     };
 
+    const onButtonPress = () => {
+
+
+
+        if (!isActive) {
+            setAmount('0')
+            setSelectedValue('')
+            setDescription('')
+        }
+    }
+
     return (
         <View className={`flex-1 ${backgroundColor}`}>
 
@@ -84,7 +95,7 @@ const AddTransactionScreen = ({ route }) => {
                 <View className={'border border-gray-200 rounded-3xl mt-8 px-2'}>
                     <TextInput
                         className={'py-3 px-4'}
-                        placeholder={'Description'}
+                        placeholder={'Comment'}
                         value={description}
                         onChangeText={setDescription}
                     />
@@ -108,7 +119,7 @@ const AddTransactionScreen = ({ route }) => {
                     </TouchableOpacity>
                 </View>
                 <View className={'mt-4 mb-4 px-2'}>
-                    <TouchableOpacity className={'bg-customPurple rounded-xl'}>
+                    <TouchableOpacity className={'bg-customPurple rounded-xl'} onPress={onButtonPress}>
                         <Text className={'text-white text-lg text-center py-3'}>Continue</Text>
                     </TouchableOpacity>
                 </View>
