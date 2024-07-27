@@ -2,8 +2,7 @@
 import React, {useState} from 'react';
 
 // ** React Native Imports
-import { View, Text } from 'react-native';
-import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
+import {View} from 'react-native';
 import {createStackNavigator} from "@react-navigation/stack";
 
 // ** Custom Component Imports
@@ -12,12 +11,12 @@ import HomeScreen from "./tabs/homeScreen";
 import TransactionScreen from "./tabs/transactionScreen";
 import BudgetScreen from "./tabs/budgetScreen";
 import ProfileScreen from "./tabs/profileScreen";
-import CustomTabBar from "../components/manu/customTabBar";
 import {RouteProvider} from "../components/context/routeProvider";
+import AddTransactionScreen from "./tabs/addTransactionScreen";
 
 const Stack = createStackNavigator();
 
-export default function MainScreen () {
+export default function MainScreen() {
 
     const [route, setRoute] = useState('Home');
 
@@ -25,12 +24,13 @@ export default function MainScreen () {
         <RouteProvider>
             <View className="flex-1">
                 <Stack.Navigator initialRouteName={'Home'}>
-                    <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-                    <Stack.Screen name="Transaction" component={TransactionScreen} options={{ headerShown: false }} />
-                    <Stack.Screen name="Budget" component={BudgetScreen} options={{ headerShown: false }} />
-                    <Stack.Screen name="Settings" component={ProfileScreen} options={{ headerShown: false }} />
+                    <Stack.Screen name="Home" component={HomeScreen} options={{headerShown: false}}/>
+                    <Stack.Screen name="Transaction" component={TransactionScreen} options={{headerShown: false}}/>
+                    <Stack.Screen name="Budget" component={BudgetScreen} options={{headerShown: false}}/>
+                    <Stack.Screen name="Settings" component={ProfileScreen} options={{headerShown: false}}/>
+
                 </Stack.Navigator>
-                <NavigationBar />
+                <NavigationBar/>
             </View>
         </RouteProvider>
     );
