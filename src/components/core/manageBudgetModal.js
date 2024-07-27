@@ -33,7 +33,7 @@ const ManageBudgetModal = ({modalVisible, setModalVisible, selectedCategory, set
                                 />
                             </View>
 
-                            <View className={'flex-row justify-start mt-2'}>
+                            <View className={'flex-row justify-end mt-2'}>
                                 <TouchableOpacity disabled={add}
                                                   className={'flex-row justify-center bg-red-600 py-1 w-16 rounded-md mr-2'}>
                                     <Text className={'text-white'}>Delete</Text>
