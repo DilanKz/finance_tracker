@@ -1,7 +1,7 @@
 import React from 'react';
 import {FontAwesome6, MaterialCommunityIcons} from '@expo/vector-icons';
 
-const categories = [
+export const categories = [
     {
         title: 'Shopping',
         icon: <FontAwesome6 name="basket-shopping" size={42} color="#F59E0B" />,
