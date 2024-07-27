@@ -4,6 +4,7 @@ import MainScreen from "./src/screens/mainScreen";
 
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import AddTransactionScreen from "./src/screens/tabs/addTransactionScreen";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -14,6 +15,10 @@ export default function App() {
                 <Stack.Screen name="Loading" component={LandingScreen}/>
                 <Stack.Screen name="onBoard" component={OnboardScreen}/>
                 <Stack.Screen name="main" component={MainScreen}/>
+                <Stack.Screen name="Income" component={AddTransactionScreen} options={{headerShown: false}}
+                              initialParams={{type: 'income'}}/>
+                <Stack.Screen name="Expense" component={AddTransactionScreen} options={{headerShown: false}}
+                              initialParams={{type: 'expense'}}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
