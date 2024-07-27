@@ -80,11 +80,23 @@ export default function NavigationBar() {
                 </TouchableOpacity>
                 {showExtraButtons && (
                     <>
-                        <TouchableOpacity className="flex justify-center items-center bg-emerald-500 h-12 w-12 rounded-full" style={styles.extraButton1} onPress={() => console.log('Extra Button 1 pressed')}>
+                        <TouchableOpacity className="flex justify-center items-center bg-emerald-500 h-12 w-12 rounded-full"
+                                          style={styles.extraButton1}
+                                          onPress={() => {
+                                              navigator('Income')
+                                              toggleExtraButtons()
+                                          }}
+                        >
                             <MaterialIcons name="arrow-downward" size={12} color={'#fff'}/>
                             <FontAwesome name="money" size={20} color={'#fff'}/>
                         </TouchableOpacity>
-                        <TouchableOpacity className="flex justify-center items-center bg-rose-500 h-12 w-12 rounded-full" style={styles.extraButton2} onPress={() => console.log('Extra Button 2 pressed')}>
+                        <TouchableOpacity className="flex justify-center items-center bg-rose-500 h-12 w-12 rounded-full"
+                                          style={styles.extraButton2}
+                                          onPress={() => {
+                                              navigator('Expense')
+                                              toggleExtraButtons()
+                                          }}
+                        >
                             <MaterialIcons name="arrow-upward" size={12} color={'#fff'}/>
                             <FontAwesome name="money" size={20} color={'#fff'}/>
                         </TouchableOpacity>
