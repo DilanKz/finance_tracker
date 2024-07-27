@@ -1,6 +1,14 @@
 import React, {useState, useContext, useRef, useEffect} from 'react';
 import { Text, TouchableOpacity, View, StyleSheet, Animated } from 'react-native';
-import { AntDesign, FontAwesome6, Fontisto, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+    AntDesign,
+    FontAwesome,
+    FontAwesome6,
+    Fontisto,
+    Ionicons,
+    MaterialCommunityIcons,
+    MaterialIcons
+} from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { RouteContext } from "../context/routeProvider";
 
@@ -72,11 +80,13 @@ export default function NavigationBar() {
                 </TouchableOpacity>
                 {showExtraButtons && (
                     <>
-                        <TouchableOpacity className="items-center bg-customPurple p-3 rounded-full" style={styles.extraButton1} onPress={() => console.log('Extra Button 1 pressed')}>
-                            <AntDesign name="camera" size={24} color="white" />
+                        <TouchableOpacity className="flex justify-center items-center bg-emerald-500 h-12 w-12 rounded-full" style={styles.extraButton1} onPress={() => console.log('Extra Button 1 pressed')}>
+                            <MaterialIcons name="arrow-downward" size={12} color={'#fff'}/>
+                            <FontAwesome name="money" size={20} color={'#fff'}/>
                         </TouchableOpacity>
-                        <TouchableOpacity className="items-center bg-customPurple p-3 rounded-full" style={styles.extraButton2} onPress={() => console.log('Extra Button 2 pressed')}>
-                            <AntDesign name="filetext1" size={24} color="white" />
+                        <TouchableOpacity className="flex justify-center items-center bg-rose-500 h-12 w-12 rounded-full" style={styles.extraButton2} onPress={() => console.log('Extra Button 2 pressed')}>
+                            <MaterialIcons name="arrow-upward" size={12} color={'#fff'}/>
+                            <FontAwesome name="money" size={20} color={'#fff'}/>
                         </TouchableOpacity>
                     </>
                 )}
