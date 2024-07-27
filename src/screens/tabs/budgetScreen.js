@@ -14,10 +14,12 @@ const BudgetScreen = () => {
     const [editBudget, setEditBudget] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
+    const [popupState, setPopupState] = useState();
 
     const scrollY = useRef(new Animated.Value(0)).current;
 
-    const handlePress = (category) => {
+    const handlePress = (category, add) => {
+        setPopupState(add)
         setSelectedCategory(category);
         setModalVisible(true);
     };
@@ -109,7 +111,7 @@ const BudgetScreen = () => {
                                         }
 
                                         return (
-                                            <TouchableOpacity key={index} onPress={() => handlePress(category)}>
+                                            <TouchableOpacity key={index} onPress={() => handlePress(category, dot === '')}>
                                                 <View
                                                     className={`${category.color} relative h-12 w-12 flex rounded-lg flex-row items-center justify-center mr-2`}>
                                                     {category.iconSmall}
@@ -132,13 +134,15 @@ const BudgetScreen = () => {
                             </OffCanvasModel>
                         )}
 
-                        <ManageBudgetModal
-                            add={true}
-                            modalVisible={modalVisible}
-                            setModalVisible={setModalVisible}
-                            selectedCategory={selectedCategory}
-                            setSelectedCategory={setSelectedCategory}
-                        />
+                        {modalVisible ?
+                            <ManageBudgetModal
+                                add={popupState}
+                                modalVisible={modalVisible}
+                                setModalVisible={setModalVisible}
+                                selectedCategory={selectedCategory}
+                                setSelectedCategory={setSelectedCategory}
+                            /> : ''
+                        }
 
                     </View>
                 </Animated.ScrollView>
