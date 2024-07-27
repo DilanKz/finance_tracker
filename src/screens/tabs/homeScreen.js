@@ -20,15 +20,15 @@ const HomeScreen = () => {
     return (
         <ScrollView className="flex-1 p-4 bg-white">
 
-            <View className={'mt-12 w-full py-1 px-1 flex flex-row justify-between items-center'}>
-                <View className={'border p-1 rounded-full'}>
+            <View className={'mt-12 w-full py-1 px-1 flex flex-row justify-end items-center'}>
+                {/*<View className={'border p-1 rounded-full'}>
                     <TouchableOpacity className={'flex items-center justify-center'} onPress={()=>navigator('Profile')}>
                         <Image
                             source={require('../../assets/favicon.png')}
                             className={'w-10 h-10 rounded-full'}
                         />
                     </TouchableOpacity>
-                </View>
+                </View>*/}
                 <TouchableOpacity className={'flex items-center justify-center relative'}>
                     <FontAwesome name="bell" size={24} color="#7F39FB" />
                 </TouchableOpacity>
