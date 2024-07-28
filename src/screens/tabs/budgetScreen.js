@@ -4,7 +4,7 @@ import BudgetCharts from "../../components/core/budgetCharts";
 import {BudgetProgressCard} from "../../components/budget/budgetProgressCard";
 import {FontAwesome6, MaterialIcons} from "@expo/vector-icons";
 import {OffCanvasModel} from "../../components/core/offcanvasModel";
-import categories from "../../utils/constants";
+import categories, {getCategoryByTitle} from "../../utils/constants";
 import ManageBudgetModal from "../../components/core/manageBudgetModal";
 
 const arr = ['Shopping', 'Food', 'Travel', 'Others'];
@@ -82,13 +82,18 @@ const BudgetScreen = () => {
                             </TouchableOpacity>
                         </View>
 
-                        {arr.map((name, index) => (
-                            <TouchableWithoutFeedback key={index} onLongPress={() => setManageCategory(true)}>
-                                <View>
-                                    <BudgetProgressCard title={name}/>
-                                </View>
-                            </TouchableWithoutFeedback>
-                        ))}
+                        {arr.map((name, index) => {
+
+                            const category = getCategoryByTitle(name);
+
+                            return (
+                                <TouchableWithoutFeedback key={index} onLongPress={() => handlePress(category,false)}>
+                                    <View>
+                                        <BudgetProgressCard category={category} title={name}/>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            )
+                        })}
 
                         <BudgetCharts/>
 
