@@ -2,8 +2,7 @@ import { Text, View } from "react-native";
 import * as Progress from 'react-native-progress';
 import {getCategoryByTitle} from "../../utils/constants";
 
-export const BudgetProgressCard = (props) => {
-    const category = getCategoryByTitle(props.title);
+export const BudgetProgressCard = ({category}) => {
     return (
         <View className={'p-1 mb-2'}>
             <View style={{
@@ -21,13 +20,13 @@ export const BudgetProgressCard = (props) => {
                         <View className={`${category.color} p-2 rounded-lg flex-row items-center justify-center mr-2`}>
                             {category.iconSmall}
                         </View>
-                        <Text className='font-semibold'>{category.title}</Text>
+                        <Text className='text-gray-500 uppercase font-semibold'>{category.title}</Text>
                     </View>
-                    <Text className='text-lg'>-</Text>
+                    {/*<Text className='text-lg'>-</Text>*/}
                 </View>
 
-                <Text className='text-lg font-semibold mb-2'>
-                    Remaining
+                <Text className='font-semibold mb-2'>
+                    Remaining: 123
                 </Text>
 
                 <Progress.Bar
