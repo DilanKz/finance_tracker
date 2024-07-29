@@ -3,6 +3,24 @@ import {FontAwesome6, MaterialCommunityIcons} from '@expo/vector-icons';
 
 export const categories = [
     {
+        title: 'Salary',
+        icon: <MaterialCommunityIcons name="cash-multiple" size={42} color="#10B981" />,
+        iconSmall: <MaterialCommunityIcons name="cash-multiple" size={18} color="#10B981" />,
+        color: 'bg-green-200',
+        category: 'income',
+        titleColor: 'text-green-700',
+        colorHex:'#10B981',
+    },
+    {
+        title: 'Passive Income',
+        icon: <MaterialCommunityIcons name="currency-usd" size={42} color="#A78BFA" />,
+        iconSmall: <MaterialCommunityIcons name="currency-usd" size={24} color="#A78BFA" />,
+        color: 'bg-purple-200',
+        category: 'income',
+        titleColor: 'text-purple-700',
+        colorHex:'#A78BFA',
+    },
+    {
         title: 'Shopping',
         icon: <FontAwesome6 name="basket-shopping" size={42} color="#F59E0B" />,
         iconSmall: <FontAwesome6 name="basket-shopping" size={18} color="#F59E0B" />,
@@ -66,15 +84,6 @@ export const categories = [
         colorHex:'#3B82F6',
     },
     {
-        title: 'Salary',
-        icon: <MaterialCommunityIcons name="cash-multiple" size={42} color="#FBBF24" />,
-        iconSmall: <MaterialCommunityIcons name="cash-multiple" size={18} color="#FBBF24" />,
-        color: 'bg-yellow-200',
-        category: 'income',
-        titleColor: 'text-yellow-700',
-        colorHex:'#FBBF24',
-    },
-    {
         title: 'Others',
         icon: <MaterialCommunityIcons name="dots-horizontal" size={42} color="#9CA3AF" />,
         iconSmall: <MaterialCommunityIcons name="dots-horizontal" size={24} color="#9CA3AF" />,
@@ -82,7 +91,8 @@ export const categories = [
         category: 'expense',
         titleColor: 'text-gray-700',
         colorHex:'#9CA3AF',
-    }
+    },
+
 ];
 
 export const getCategoryByTitle = (title) => {
