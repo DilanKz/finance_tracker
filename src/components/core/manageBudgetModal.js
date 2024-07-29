@@ -1,7 +1,7 @@
 import {Modal, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View} from "react-native";
 import {useState} from "react";
-
-const ManageBudgetModal = ({modalVisible, setModalVisible, selectedCategory, setSelectedCategory, add}) => {
+import { FontAwesome5 } from '@expo/vector-icons';
+const ManageBudgetModal = ({modalVisible, setModalVisible, selectedCategory, setSelectedCategory, add, onAddClick}) => {
 
     const [amount, setAmount] = useState('');
 
@@ -14,6 +14,11 @@ const ManageBudgetModal = ({modalVisible, setModalVisible, selectedCategory, set
 
         setAmount(numericValue);
     };
+
+    const handleAddOnClick = () => {
+        onAddClick(amount)
+        closeModal()
+    }
 
     return (
         <Modal
@@ -35,14 +40,22 @@ const ManageBudgetModal = ({modalVisible, setModalVisible, selectedCategory, set
                                 </View>
                             </View>
 
-                            <View className={'flex-row'}>
-                                <Text className={'font-semibold text-gray-500 w-16'}>Title :</Text>
-                                <Text className={'font-semibold text-gray-500'}>{selectedCategory.title}</Text>
-                            </View>
+                            <View className={'flex-row mt-2 gap-x-2 items-center'}>
+                                <Text className={`p-1 font-semibold rounded-md ${selectedCategory.color}`}
+                                      style={{color:selectedCategory.colorHex}}
+                                >
+                                    {selectedCategory.title}
+                                </Text>
 
-                            <View className={'flex-row w-1/3 justify-between'}>
-                                <Text className={'font-semibold text-gray-500 w-16'}>Type :</Text>
-                                <Text className={'font-semibold text-gray-500 capitalize'}>{selectedCategory.category}</Text>
+                                {selectedCategory.category === 'expense' ?
+                                    <View className={'bg-red-200 h-7 w-7 flex-row justify-center items-center rounded-md'}>
+                                        <FontAwesome5 name="arrow-up" size={14} color="red" />
+                                    </View> :
+
+                                    <View className={'bg-green-200 h-7 w-7 flex-row justify-center items-center rounded-md'}>
+                                        <FontAwesome5 name="arrow-down" size={14} color="green" />
+                                    </View>
+                                }
                             </View>
 
                             <View className={'flex-row mb-4 mt-2 items-center border border-gray-200 rounded-md'}>
@@ -55,12 +68,13 @@ const ManageBudgetModal = ({modalVisible, setModalVisible, selectedCategory, set
                                 />
                             </View>
 
-                            <View className={'flex-row justify-end mt-2'}>
+                            <View className={'flex-row justify-end mt-1'}>
                                 {!add ? <TouchableOpacity
                                     className={'flex-row justify-center bg-red-600 py-1 w-16 rounded-md mr-2'}>
                                     <Text className={'text-white'}>Delete</Text>
                                 </TouchableOpacity> :''}
                                 <TouchableOpacity
+                                    onPress={handleAddOnClick}
                                     className={'flex-row justify-center bg-emerald-600 py-1 w-16 rounded-md'}>
                                     <Text className={'text-white'}>Add</Text>
                                 </TouchableOpacity>
