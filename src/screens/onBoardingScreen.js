@@ -9,6 +9,7 @@ import {StatusBar, Text, TouchableOpacity} from "react-native";
 import Login from "../components/boarding/login";
 import Register from "../components/boarding/register";
 import {CustomCarousel} from "../components/boarding/customCarousel";
+import AddBudget from "../components/boarding/addBudget";
 
 export default function OnboardScreen({navigation}) {
 
@@ -23,7 +24,7 @@ export default function OnboardScreen({navigation}) {
                         <CustomCarousel />
                     </StyledView>
                     <StyledView className={'w-screen h-1/5 p-2 px-4'}>
-                        <TouchableOpacity className={'w-full flex items-center py-4 bg-customPurple rounded-xl mb-4'}
+                        {/*<TouchableOpacity className={'w-full flex items-center py-4 bg-customPurple rounded-xl mb-4'}
                                           onPress={()=>setScreen('register')}
                         >
                             <Text className={'text-xl text-gray-100'}>Sign up</Text>
@@ -32,11 +33,17 @@ export default function OnboardScreen({navigation}) {
                                           onPress={()=>setScreen('login')}
                         >
                             <Text className={'text-xl text-customPurple'}>Login</Text>
+                        </TouchableOpacity>*/}
+                        <TouchableOpacity className={'w-full flex items-center py-4 bg-customPurple rounded-xl mb-4'}
+                                          onPress={()=>setScreen('setup')}
+                        >
+                            <Text className={'text-xl text-gray-100'}>Setup Account</Text>
                         </TouchableOpacity>
                     </StyledView>
                 </>
                 : screen === 'login' ? <Login setScreen={setScreen} /> :
-                    screen === 'register' ? <Register setScreen={setScreen} /> :''
+                    screen === 'register' ? <Register setScreen={setScreen} /> :
+                        screen === 'setup' ? <AddBudget setScreen={setScreen} /> : ''
             }
         </StyledView>
     );
