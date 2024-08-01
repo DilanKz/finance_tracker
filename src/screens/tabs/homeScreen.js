@@ -14,7 +14,18 @@ const HomeScreen = () => {
     const {route, setRoute} = useContext(RouteContext);
 
     const [userObj, setUserObj] = useState({});
+    const [allTransactions, setAllTransactions] = useState([]);
 
+    const loadAllTransactions = async () => {
+        await TransactionController.loadRecentTransactions().then(res => {
+            console.log(res)
+            setAllTransactions(res.data)
+        })
+    }
+
+    useEffect(() => {
+        loadAllTransactions()
+    }, []);
 
     const navigator = (value) => {
         navigation.navigate(value)
@@ -59,7 +70,7 @@ const HomeScreen = () => {
             </View>
 
             <View className={'mt-4'}>
-                <Text className={'text-center font-semibold text-gray-400 mb-2'}>Account Balance</Text>
+                <Text className={'text-center font-semibold text-gray-400 mb-2'}>Current Budget</Text>
                 <Text className={'text-center font-bold text-4xl mb-4'}>LKR {userObj?.budget || 0}</Text>
 
                 <View className={'flex-row justify-center gap-x-3'}>
@@ -95,7 +106,7 @@ const HomeScreen = () => {
             <MinimalBezierLineChart/>
 
             <View className={'mt-8 mb-4'}>
-                <Recent navigate={() => navigator('Transaction')}/>
+                <Recent allTransactions={allTransactions} navigate={() => navigator('Transaction')}/>
             </View>
 
         </ScrollView>
