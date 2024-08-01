@@ -1,9 +1,23 @@
 import {Text, TouchableOpacity, View} from "react-native";
 import TransactionCard from "../transactions/transactionCard";
+import {useEffect, useState} from "react";
+import TransactionController from "../../db/controllers/TransactionController";
 
 const arr = ['Shopping', 'Food', 'Travel', 'Health']
 
 const Recent = (props) => {
+
+    const [allTransactions, setAllTransactions] = useState([]);
+
+    const loadAllTransactions = async () => {
+        await TransactionController.loadRecentTransactions().then(res => {
+            setAllTransactions(res.data)
+        })
+    }
+
+    useEffect(() => {
+        loadAllTransactions()
+    }, []);
 
     return (
         <View classNam={'flex-1'}>
@@ -14,9 +28,17 @@ const Recent = (props) => {
                 </TouchableOpacity>
             </View>
 
-            {arr.map((name,index) => (
-                <TransactionCard key={index} title={name} />
-            ))}
+            {allTransactions?.map((item,index) => {
+                console.log(item)
+
+                return (
+                    <TransactionCard key={index} item={item} />
+                )
+            })}
+
+            {allTransactions?.length === 0 ?
+                <Text className={'text-gray-500 text-center mt-12'}>Wow its empty</Text>
+                : ''}
         </View>
     )
 }
