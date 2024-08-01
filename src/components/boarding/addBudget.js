@@ -12,14 +12,16 @@ const AddBudget = ({setScreen}) => {
     const navigation = useNavigation();
 
     const [modalVisible, setModalVisible] = useState(false);
+    const [modalOnlyAdd, setModalOnlyAdd] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [budget, setBudget] = useState('0');
     const [name, setName] = useState('');
     const [selectedCategoriesArr, setSelectedCategoriesArr] = useState([]);
     const [totalCategoryBudget, setTotalCategoryBudget] = useState(0);
 
-    const handlePress = (category) => {
+    const handlePress = (category, add) => {
         if (budget) {
+            setModalOnlyAdd(add)
             setSelectedCategory(category);
             setModalVisible(true);
         } else {
@@ -170,7 +172,7 @@ const AddBudget = ({setScreen}) => {
                                     }
 
                                     return (
-                                        <TouchableOpacity key={index} onPress={() => handlePress(category)}>
+                                        <TouchableOpacity key={index} onPress={() => handlePress(category, dot === '')}>
                                             <View
                                                 className={`${category.color} relative h-12 w-12 flex rounded-lg flex-row items-center justify-center mr-2`}>
                                                 {category.iconSmall}
@@ -198,7 +200,7 @@ const AddBudget = ({setScreen}) => {
 
             {modalVisible ?
                 <ManageBudgetModal
-                    add={true}
+                    add={modalOnlyAdd}
                     modalVisible={modalVisible}
                     setModalVisible={setModalVisible}
                     selectedCategory={selectedCategory}
