@@ -5,25 +5,13 @@ import TransactionController from "../../db/controllers/TransactionController";
 
 const arr = ['Shopping', 'Food', 'Travel', 'Health']
 
-const Recent = (props) => {
-
-    const [allTransactions, setAllTransactions] = useState([]);
-
-    const loadAllTransactions = async () => {
-        await TransactionController.loadRecentTransactions().then(res => {
-            setAllTransactions(res.data)
-        })
-    }
-
-    useEffect(() => {
-        loadAllTransactions()
-    }, []);
+const Recent = ({navigate, allTransactions}) => {
 
     return (
         <View classNam={'flex-1'}>
             <View className={'flex-row justify-between'}>
                 <Text className={'font-semibold text-lg'}>Recent Transactions</Text>
-                <TouchableOpacity className={'rounded-2xl bg-violet-200 px-3 py-1'} onPress={props.navigate}>
+                <TouchableOpacity className={'rounded-2xl bg-violet-200 px-3 py-1'} onPress={navigate}>
                     <Text className={'text-customPurple'}>See All</Text>
                 </TouchableOpacity>
             </View>
