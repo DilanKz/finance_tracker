@@ -4,6 +4,7 @@ import {AntDesign, FontAwesome5, MaterialIcons} from "@expo/vector-icons";
 import {useNavigation} from "@react-navigation/native";
 import RNPickerSelect from "react-native-picker-select";
 import TransactionController from "../../db/controllers/TransactionController";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const expenseOptions = [
     {label: 'Shopping', value: 'Shopping'},
@@ -53,16 +54,19 @@ const AddTransactionScreen = ({ route }) => {
 
         console.log(transaction)
 
-        await TransactionController.addTransaction(transaction).then(res => {
-            console.log(res)
+        await TransactionController.addTransaction(transaction).then(async res => {
+            if (res.success) {
+                await AsyncStorage.setItem('userData', JSON.stringify(res.data));
+
+            }
         })
 
-        if (isActive) {
+        if (!isActive) {
             setAmount('0')
             setSelectedValue('')
             setDescription('')
         } else {
-            // navigation.navigate('main')
+            navigation.navigate('main')
         }
     }
 
