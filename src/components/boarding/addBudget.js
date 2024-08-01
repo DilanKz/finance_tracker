@@ -3,8 +3,13 @@ import {AntDesign} from "@expo/vector-icons";
 import categories from "../../utils/constants";
 import {useState} from "react";
 import ManageBudgetModal from "../core/manageBudgetModal";
+import UserController from "../../db/controllers/UserController";
+import {useNavigation} from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AddBudget = ({setScreen}) => {
+
+    const navigation = useNavigation();
 
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
@@ -29,24 +34,84 @@ const AddBudget = ({setScreen}) => {
     };
 
     const addToArray = (categoryBudget) => {
-
-        const newBudget = Number(categoryBudget)+totalCategoryBudget;
+        const newBudget = Number(categoryBudget) + totalCategoryBudget;
 
         if (budget < newBudget) {
-            alert(`Your ${selectedCategory.title} budget exceed total budget`)
-
+            alert(`Your ${selectedCategory.title} budget exceeds the total budget`);
         } else {
+            const existingCategoryIndex = selectedCategoriesArr.findIndex(
+                (item) => item.title === selectedCategory.title
+            );
 
-            const newObj = {
-                title: selectedCategory.title,
-                budget: categoryBudget,
-                remaining: categoryBudget,
-                used: '0',
+            if (existingCategoryIndex > -1) {
+                const updatedArr = [...selectedCategoriesArr];
+                updatedArr[existingCategoryIndex] = {
+                    ...updatedArr[existingCategoryIndex],
+                    budget: categoryBudget,
+                    remaining: categoryBudget,
+                    used: '0',
+                };
+                setSelectedCategoriesArr(updatedArr);
+            } else {
+                const newObj = {
+                    title: selectedCategory.title,
+                    budget: categoryBudget,
+                    remaining: categoryBudget,
+                    used: '0',
+                };
+                const updatedArr = [...selectedCategoriesArr, newObj];
+                setSelectedCategoriesArr(updatedArr);
+            }
+
+            setTotalCategoryBudget(newBudget);
+        }
+    }
+
+
+
+    const handleSetupAccount = async () => {
+        if (name.trim() === '' || name.length <= 2) {
+            console.log(name)
+            alert('add a valid name')
+        } else if (budget.trim() === '' || budget.trim() === '0') {
+            alert('add a valid budget')
+        } else if (selectedCategoriesArr.length <= 2) {
+            alert('add 3 categories to continue ')
+        }else {
+
+            let breakdownArr = [...selectedCategoriesArr];
+
+            if (totalCategoryBudget < Number(budget)) {
+                const otherBudget = Number(budget) - totalCategoryBudget;
+                const others = { title: 'Others', budget: otherBudget.toString(), remaining: otherBudget.toString(), used: '0' }
+
+                breakdownArr = [...selectedCategoriesArr, others];
+            }
+
+            const user = {
+                id: Date.now().toString(),
+                username: name,
+                budget: budget,
+                income: '0',
+                expense: '0',
+                breakdowns: breakdownArr,
             };
 
-            const updatedArr = [...selectedCategoriesArr, newObj];
-            setSelectedCategoriesArr(updatedArr);
-            setTotalCategoryBudget(newBudget)
+            console.log(user)
+
+            await UserController.addSampleUser(user).then(async res => {
+                console.log('response :', res)
+                if (res.success) {
+                    try {
+                        await AsyncStorage.setItem('userData', JSON.stringify(res.data));
+                        navigation.navigate('main')
+                    } catch (error) {
+                        console.error('Error saving user data:', error);
+                    }
+                } else {
+                    console.log('Failed to add user:', res.message);
+                }
+            })
         }
     }
 
@@ -83,7 +148,9 @@ const AddBudget = ({setScreen}) => {
             <View className={'flex-1 bg-white rounded-t-3xl pt-6 px-4'}>
                 <View className={'flex-row border border-gray-200 p-2 rounded-xl'}>
                     <TextInput
+                        value={name}
                         placeholder={'Name'}
+                        onChangeText={setName}
                         className={'text-lg flex-1'}
                     />
                 </View>
@@ -94,22 +161,25 @@ const AddBudget = ({setScreen}) => {
 
                         {categories.map((category, index) => {
                             if (category.category !== 'income') {
-                                let dot = '';
-                                if (selectedCategoriesArr.some(item => item.title === category.title)) {
-                                    dot = (
-                                        <View className="absolute bg-green-500 p-1 rounded-full right-0 -top-0.5"></View>
+                                if (category.title !== 'Others') {
+                                    let dot = '';
+                                    if (selectedCategoriesArr.some(item => item.title === category.title)) {
+                                        dot = (
+                                            <View className="absolute bg-green-500 p-1 rounded-full right-0 -top-0.5"></View>
+                                        );
+                                    }
+
+                                    return (
+                                        <TouchableOpacity key={index} onPress={() => handlePress(category)}>
+                                            <View
+                                                className={`${category.color} relative h-12 w-12 flex rounded-lg flex-row items-center justify-center mr-2`}>
+                                                {category.iconSmall}
+                                                {dot}
+                                            </View>
+                                        </TouchableOpacity>
                                     );
                                 }
-
-                                return (
-                                    <TouchableOpacity key={index} onPress={() => handlePress(category)}>
-                                        <View
-                                            className={`${category.color} relative h-12 w-12 flex rounded-lg flex-row items-center justify-center mr-2`}>
-                                            {category.iconSmall}
-                                            {dot}
-                                        </View>
-                                    </TouchableOpacity>
-                                );
+                                return null;
                             }
                             return null;
                         })}
@@ -119,7 +189,7 @@ const AddBudget = ({setScreen}) => {
                 </ScrollView>
 
                 <View className={'flex-row border border-gray-200 mb-4 rounded-xl'}>
-                    <TouchableOpacity className={'w-full flex items-center py-4 bg-customPurple rounded-xl mb-4'}>
+                    <TouchableOpacity className={'w-full flex items-center py-4 bg-customPurple rounded-xl mb-4'} onPress={handleSetupAccount}>
                         <Text className={'text-xl text-gray-100'}>Let’s go</Text>
                     </TouchableOpacity>
                 </View>
