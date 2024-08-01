@@ -10,8 +10,8 @@ class TransactionController {
     static async loadRecentTransactions() {
         return  await DatabaseService.getRecentTransactions();
     }
-    static async loadTransactionsWithTime(period) {
-        return  await DatabaseService.getTransactionsByPeriod(period);
+    static async loadTransactionsWithTime(period, type = null, sort = 'newest') {
+        return  await DatabaseService.getTransactionsByPeriod(period, type, sort);
     }
 
 
