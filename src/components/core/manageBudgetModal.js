@@ -1,7 +1,7 @@
 import {Modal, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View} from "react-native";
 import {useState} from "react";
 import { FontAwesome5 } from '@expo/vector-icons';
-const ManageBudgetModal = ({modalVisible, setModalVisible, selectedCategory, setSelectedCategory, add, onAddClick}) => {
+const ManageBudgetModal = ({modalVisible, setModalVisible, selectedCategory, setSelectedCategory, add, onAddClick, onDeleteClick}) => {
 
     const [amount, setAmount] = useState('');
 
@@ -17,6 +17,10 @@ const ManageBudgetModal = ({modalVisible, setModalVisible, selectedCategory, set
 
     const handleAddOnClick = () => {
         onAddClick(amount)
+        closeModal()
+    }
+    const handleDeleteOnClick = () => {
+        onDeleteClick(amount)
         closeModal()
     }
 
