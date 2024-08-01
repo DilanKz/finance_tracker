@@ -8,6 +8,7 @@ import {StatusBar} from "expo-status-bar";
 import {Image, View} from "react-native";
 import UserController from "../db/controllers/UserController";
 import DatabaseService from "../db/services/DatabaseService";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function LandingScreen({navigation}) {
 
@@ -23,9 +24,9 @@ export default function LandingScreen({navigation}) {
 
             await DatabaseService.initializeDatabase();
 
-            UserController.isStorageInitialized().then(res => {
-                console.log(res)
+            UserController.isStorageInitialized().then(async res => {
                 if (res.success) {
+                    await AsyncStorage.setItem('userData', JSON.stringify(res.data));
                     navigation.navigate('main');
                 } else {
                     navigation.navigate('onBoard');
