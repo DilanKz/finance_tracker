@@ -3,13 +3,19 @@ import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native'
 import {AntDesign, FontAwesome5, MaterialIcons} from "@expo/vector-icons";
 import {useNavigation} from "@react-navigation/native";
 import RNPickerSelect from "react-native-picker-select";
+import TransactionController from "../../db/controllers/TransactionController";
 
-const dateOptions = [
+const expenseOptions = [
     {label: 'Shopping', value: 'Shopping'},
     {label: 'Health', value: 'Health'},
     {label: 'Travel', value: 'Travel'},
     {label: 'Entertainment', value: 'Entertainment'},
     {label: 'Others', value: 'Others'},
+];
+
+const incomeOptions = [
+    {label: 'Salary', value: 'Salary'},
+    {label: 'Passive Income', value: 'Passive Income'},
 ];
 
 const AddTransactionScreen = ({ route }) => {
@@ -34,14 +40,29 @@ const AddTransactionScreen = ({ route }) => {
         setAmount(numericValue);
     };
 
-    const onButtonPress = () => {
+    const onButtonPress = async () => {
 
+        const transaction = {
+            id: Date.now().toString(),
+            amount: amount,
+            date: new Date().toISOString(),
+            breakdownTitle: selectedValue,
+            description: description,
+            type: type,
+        };
 
+        console.log(transaction)
 
-        if (!isActive) {
+        await TransactionController.addTransaction(transaction).then(res => {
+            console.log(res)
+        })
+
+        if (isActive) {
             setAmount('0')
             setSelectedValue('')
             setDescription('')
+        } else {
+            // navigation.navigate('main')
         }
     }
 
@@ -82,7 +103,7 @@ const AddTransactionScreen = ({ route }) => {
                 <View className={'border border-gray-200 rounded-3xl px-2'}>
                     <RNPickerSelect
                         onValueChange={(value) => setSelectedValue(value)}
-                        items={dateOptions}
+                        items={type === 'income' ? incomeOptions : expenseOptions}
                         value={selectedValue}
                         style={{
                             inputIOS: styles.inputIOS,
