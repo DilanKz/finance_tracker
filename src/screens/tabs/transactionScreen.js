@@ -13,34 +13,39 @@ import {
 } from 'react-native';
 import RNPickerSelect from 'react-native-picker-select';
 import {FontAwesome5, MaterialIcons} from '@expo/vector-icons';
-import TransactionDetailCard from "../../components/transactions/transactionDetailCard";
 import RadioButtonGroup from "../../components/core/radioButtonGroup";
+import TransactionController from "../../db/controllers/TransactionController";
+import TransactionDetailCard from "../../components/transactions/transactionDetailCard";
 
 const dateOptions = [
-    {label: 'Day', value: 'Day'},
-    {label: 'Week', value: 'Week'},
-    {label: 'Month', value: 'Month'},
-    {label: 'Year', value: 'Year'},
+    {label: 'Today', value: 'today'},
+    {label: 'Yesterday', value: 'yesterday'},
+    {label: 'This Week', value: 'this_week'},
+    {label: 'This Month', value: 'this_month'}
 ];
 const filterOptionArr = [
-    {label: 'Income', value: 'Income'},
-    {label: 'Expense', value: 'Expense'},
+    {label: 'Income', value: 'income'},
+    {label: 'Expense', value: 'expense'},
 ];
 const sortOptionArr = [
-    {label: 'Highest', value: 'Highest'},
-    {label: 'Lowest', value: 'Lowest'},
-    {label: 'Oldest', value: 'Oldest'},
-    {label: 'Newest', value: 'Newest'},
+    {label: 'Highest', value: 'highest'},
+    {label: 'Lowest', value: 'lowest'},
+    {label: 'Oldest', value: 'oldest'},
+    {label: 'Newest', value: 'newest'},
 ];
 
 const {height: windowHeight} = Dimensions.get('window');
 
 const TransactionScreen = () => {
-    const [selectedValue, setSelectedValue] = useState('Month');
+    const [selectedValue, setSelectedValue] = useState('today');
+    const [selectedObject, setSelectedObject] = useState({});
     const [modalVisible, setModalVisible] = useState(false);
     const slideAnim = useRef(new Animated.Value(windowHeight)).current;
+
     const [filterByOptions, setFilterByOptions] = useState(null);
-    const [sortByOptions, setSortByOptions] = useState(null);
+    const [sortByOptions, setSortByOptions] = useState('newest');
+
+    const [transactions, setTransactions] = useState([]);
 
     const toggleModal = () => {
         if (modalVisible) {
@@ -64,6 +69,26 @@ const TransactionScreen = () => {
         setFilterByOptions(null)
     }
 
+    const handlePickerOnSelect = (value) => {
+        setSelectedValue(value)
+        let option = dateOptions.find(option => option.value === value);
+        setSelectedObject(option)
+    }
+
+    const loadAllFilteredTransactions = async () => {
+        await TransactionController.loadTransactionsWithTime(selectedValue, filterByOptions, sortByOptions).then(res => {
+            if (res.success) {
+                setTransactions(res.data)
+            } else {
+                alert(res.error)
+            }
+        })
+    }
+
+    useEffect(() => {
+        loadAllFilteredTransactions()
+    }, [selectedValue,filterByOptions,sortByOptions]);
+
     useEffect(() => {
         if (!modalVisible) {
             slideAnim.setValue(windowHeight);
@@ -75,18 +100,13 @@ const TransactionScreen = () => {
             <View className="mt-16 w-full py-2 flex flex-row justify-between items-center">
                 <View className="border border-gray-200 rounded-full bg-white px-2 py-1">
                     <RNPickerSelect
-                        onValueChange={(value) => setSelectedValue(value)}
+                        onValueChange={handlePickerOnSelect}
                         items={dateOptions}
-                        value={selectedValue}
                         style={{
                             inputIOS: styles.inputIOS,
                             inputAndroid: styles.inputAndroid,
                             iconContainer: styles.iconContainer,
                         }}
-                        useNativeAndroidPickerStyle={false}
-                        Icon={() => (
-                            <FontAwesome5 name="chevron-down" size={12} color="#8a2be2"/>
-                        )}
                     />
                 </View>
 
@@ -104,16 +124,9 @@ const TransactionScreen = () => {
             <ScrollView className="flex-1">
                 <View className="">
                     <TransactionDetailCard
-                        title={'Today'}
-                        filter={'today'}
-                    />
-                    <TransactionDetailCard
-                        title={'Yesterday'}
-                        filter={'yesterday'}
-                    />
-                    <TransactionDetailCard
-                        title={'This Month'}
-                        filter={'month'}
+                        filteredData={transactions}
+                        title={selectedObject.label}
+                        filter={selectedObject.value}
                     />
                 </View>
             </ScrollView>
@@ -145,7 +158,8 @@ const TransactionScreen = () => {
                             >
                                 <View className={'flex-row justify-between'}>
                                     <Text className="text-lg font-semibold">Filter Transaction </Text>
-                                    <TouchableOpacity className={'rounded-2xl bg-violet-200 px-3 py-1'} onPress={clearFilter}>
+                                    <TouchableOpacity className={'rounded-2xl bg-violet-200 px-3 py-1'}
+                                                      onPress={clearFilter}>
                                         <Text className={'text-customPurple'}>Reset</Text>
                                     </TouchableOpacity>
                                 </View>
@@ -181,7 +195,7 @@ const styles = StyleSheet.create({
 
     inputIOS: {
         height: 20,
-        width: 100,
+        width: 120,
         paddingHorizontal: 10,
         color: 'black',
         justifyContent: 'center',
@@ -189,7 +203,7 @@ const styles = StyleSheet.create({
     },
     inputAndroid: {
         height: 40,
-        width: 100,
+        width: 150,
         paddingHorizontal: 10,
         color: 'black',
         justifyContent: 'center',
