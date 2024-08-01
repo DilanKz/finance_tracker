@@ -7,8 +7,8 @@ const TransactionDetailCard = (props) => {
     return (
         <View className={'w-full'}>
             <Text className="text-2xl text-gray-800 font-semibold">{props.title}</Text>
-            {arr.map((name,index) => (
-                <TransactionCard key={index} title={name} />
+            {props.filteredData.map((item,index) => (
+                <TransactionCard key={index} item={item} />
             ))}
         </View>
     )
