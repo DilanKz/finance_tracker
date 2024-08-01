@@ -6,15 +6,39 @@ import {StatusBar} from "expo-status-bar";
 
 // ** React Native Imports
 import {Image, View} from "react-native";
+import UserController from "../db/controllers/UserController";
+import DatabaseService from "../db/services/DatabaseService";
 
 export default function LandingScreen({navigation}) {
 
     useEffect(() => {
-        let timeout = setTimeout(() => {
-            navigation.navigate('onBoard')
-        }, 2000);
+        const initializeStorage = async () => {
 
-        return () => clearTimeout(timeout)
+
+            /*let timeout = setTimeout(() => {
+                navigation.navigate('onBoard')
+            }, 2000);
+
+            return () => clearTimeout(timeout)*/
+
+            await DatabaseService.initializeDatabase();
+
+            UserController.isStorageInitialized().then(res => {
+                console.log(res)
+                if (res.success) {
+                    navigation.navigate('main');
+                } else {
+                    navigation.navigate('onBoard');
+                }
+            });
+            /*if (isInitialized) {
+                navigation.navigate('main');
+            } else {
+                navigation.navigate('onBoard');
+            }*/
+        };
+
+        initializeStorage();
     }, []);
 
     return (
