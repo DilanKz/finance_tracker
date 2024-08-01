@@ -1,21 +1,45 @@
-import React, {useContext} from 'react';
-import {ScrollView, Text, TouchableOpacity, View, Image} from 'react-native';
+import React, {useContext, useEffect, useState} from 'react';
+import {ScrollView, Text, TouchableOpacity, View} from 'react-native';
 import MinimalBezierLineChart from "../../components/core/minimalChart";
-import {AntDesign, FontAwesome, Ionicons, MaterialIcons} from "@expo/vector-icons";
+import {FontAwesome, MaterialIcons} from "@expo/vector-icons";
 import {RouteContext} from "../../components/context/routeProvider";
 import {useNavigation} from "@react-navigation/native";
 import Recent from "../../components/home/recent";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import TransactionController from "../../db/controllers/TransactionController";
 
 const HomeScreen = () => {
 
     const navigation = useNavigation();
+    const {route, setRoute} = useContext(RouteContext);
 
-    const { route, setRoute } = useContext(RouteContext);
+    const [userObj, setUserObj] = useState({});
+
 
     const navigator = (value) => {
         navigation.navigate(value)
         setRoute(value)
     }
+
+    const getUserData = async () => {
+        try {
+            const userData = await AsyncStorage.getItem('userData');
+            if (userData !== null) {
+                const user = JSON.parse(userData);
+                setUserObj(user)
+
+            } else {
+                console.log('No user data found');
+            }
+        } catch (error) {
+            console.error('Error retrieving user data:', error);
+        }
+    };
+
+
+    useEffect(() => {
+        getUserData()
+    }, []);
 
     return (
         <ScrollView className="flex-1 p-4 bg-white">
@@ -30,13 +54,13 @@ const HomeScreen = () => {
                     </TouchableOpacity>
                 </View>*/}
                 <TouchableOpacity className={'flex items-center justify-center relative'}>
-                    <FontAwesome name="bell" size={24} color="#7F39FB" />
+                    <FontAwesome name="bell" size={24} color="#7F39FB"/>
                 </TouchableOpacity>
             </View>
 
             <View className={'mt-4'}>
                 <Text className={'text-center font-semibold text-gray-400 mb-2'}>Account Balance</Text>
-                <Text className={'text-center font-bold text-4xl mb-4'}>RS 12000</Text>
+                <Text className={'text-center font-bold text-4xl mb-4'}>LKR {userObj?.budget || 0}</Text>
 
                 <View className={'flex-row justify-center gap-x-3'}>
                     <View className={'bg-emerald-500 flex-row items-center px-2 py-2 rounded-2xl'}>
@@ -48,7 +72,7 @@ const HomeScreen = () => {
 
                         <View className={'ml-4'}>
                             <Text className={'text-white font-semibold '}>Income</Text>
-                            <Text className={'text-white font-semibold text-xl'}>RS 35000</Text>
+                            <Text className={'text-white font-semibold text-xl'}>LKR {userObj?.income || 0}</Text>
                         </View>
                     </View>
                     <View className={'bg-red-700 flex-row items-center px-2 py-2 rounded-2xl'}>
@@ -60,7 +84,7 @@ const HomeScreen = () => {
 
                         <View className={'ml-4'}>
                             <Text className={'text-white font-semibold '}>Expenses</Text>
-                            <Text className={'text-white font-semibold text-xl'}>RS 23000</Text>
+                            <Text className={'text-white font-semibold text-xl'}>LKR {userObj?.expense || 0}</Text>
                         </View>
                     </View>
                 </View>
@@ -71,7 +95,7 @@ const HomeScreen = () => {
             <MinimalBezierLineChart/>
 
             <View className={'mt-8 mb-4'}>
-                <Recent navigate={()=>navigator('Transaction')} />
+                <Recent navigate={() => navigator('Transaction')}/>
             </View>
 
         </ScrollView>
