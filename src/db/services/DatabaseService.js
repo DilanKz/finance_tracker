@@ -226,34 +226,31 @@ class DatabaseService {
             // Create a reference to the transactions collection
             const transactionsRef = collection(db, 'transactions');
 
-            // Fetch all transactions
-            const transactionsSnapshot = await getDocs(transactionsRef);
+            // Create a query to filter transactions by type 'expense'
+            const expenseQuery = query(transactionsRef, where('type', '==', 'expense'));
 
-            // Initialize a map to hold the grouped data
-            const groupedTransactions = {};
+            // Fetch the transactions
+            const transactionsSnapshot = await getDocs(expenseQuery);
 
-            // Iterate over each transaction
-            transactionsSnapshot.docs.forEach(doc => {
+            // Process transactions to group by breakdownTitle and sum amounts
+            const groupedTransactions = transactionsSnapshot.docs.reduce((acc, doc) => {
                 const data = doc.data();
                 const title = data.breakdownTitle;
                 const amount = parseFloat(data.amount) || 0;
 
-                if (!groupedTransactions[title]) {
-                    groupedTransactions[title] = { type: data.type, amount: 0 };
+                if (!acc[title]) {
+                    acc[title] = { title, totalAmount: 0 };
                 }
 
-                // Sum the amounts for each group
-                groupedTransactions[title].amount += amount;
-            });
+                acc[title].totalAmount += amount;
 
-            // Convert the grouped data to an array of objects
-            const groupedArray = Object.keys(groupedTransactions).map(title => ({
-                breakdownTitle: title,
-                type: groupedTransactions[title].type,
-                amount: groupedTransactions[title].amount
-            }));
+                return acc;
+            }, {});
 
-            return { success: true, data: groupedArray };
+            // Convert the result to an array
+            const result = Object.values(groupedTransactions);
+
+            return { success: true, data: result };
         } catch (error) {
             console.error('Error getting grouped transactions:', error);
             return { success: false, error: error.message };
