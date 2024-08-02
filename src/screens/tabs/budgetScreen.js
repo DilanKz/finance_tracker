@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import {Animated, Modal, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View} from 'react-native';
 import BudgetCharts from "../../components/core/budgetCharts";
 import {BudgetProgressCard} from "../../components/budget/budgetProgressCard";
@@ -6,15 +6,22 @@ import {FontAwesome6, MaterialIcons} from "@expo/vector-icons";
 import {OffCanvasModel} from "../../components/core/offcanvasModel";
 import categories, {getCategoryByTitle} from "../../utils/constants";
 import ManageBudgetModal from "../../components/core/manageBudgetModal";
+import {UserContext} from "../../components/context/userProvider";
+import TransactionController from "../../db/controllers/TransactionController";
 
 const arr = ['Shopping', 'Food', 'Travel', 'Others'];
 
 const BudgetScreen = () => {
+
+    const { user, setUser } =useContext(UserContext)
+
     const [manageCategory, setManageCategory] = useState(false);
     const [editBudget, setEditBudget] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState(null);
     const [popupState, setPopupState] = useState();
+    const [dataArray, setDataArray] = useState([]);
+
 
     const scrollY = useRef(new Animated.Value(0)).current;
 
@@ -36,6 +43,33 @@ const BudgetScreen = () => {
         extrapolate: 'clamp',
     });
 
+    const loadCategorisedTransactions = async () => {
+        await TransactionController.loadAllCategorizedTransactions().then(res => {
+            if (res.success) {
+                setDataArray(res.data)
+                console.log('data : ', res.data)
+            }
+        })
+    }
+
+    useEffect(() => {
+        loadCategorisedTransactions()
+    }, []);
+
+    const getRemainingBudget = () => {
+        let budget = Number(user.budget)
+        let used = Number(user.expense)
+
+        let remaining = budget - used;
+
+        if (remaining >= 0) {
+            return `LKR ${remaining}`
+        } else {
+            return `-LKR ${Math.abs(remaining)}`
+        }
+
+    }
+
     return (
         <View className="flex-1 bg-customPurple">
             <Animated.View style={{flex: 1}}>
@@ -49,15 +83,15 @@ const BudgetScreen = () => {
 
                     <View className="flex-1 justify-center pt-4">
                         <Text className="text-lg font-semibold text-white text-center">Current Budget</Text>
-                        <Text className="text-6xl font-bold text-white text-center">LKR 4500</Text>
+                        <Text className="text-6xl font-bold text-white text-center">LKR {user.budget}</Text>
 
                         <View className={'flex-row justify-between'}>
                             <Text className="text-lg font-semibold text-white mt-4">Used</Text>
-                            <Text className="text-lg font-semibold text-white mt-4">LKR 2000</Text>
+                            <Text className="text-lg font-semibold text-white mt-4">LKR {user.expense}</Text>
                         </View>
                         <View className={'flex-row justify-between'}>
                             <Text className="text-lg font-semibold text-white">Remaining</Text>
-                            <Text className="text-lg font-semibold text-white">LKR 2500</Text>
+                            <Text className="text-lg font-semibold text-white">{getRemainingBudget()}</Text>
                         </View>
                     </View>
                 </Animated.View>
@@ -82,20 +116,28 @@ const BudgetScreen = () => {
                             </TouchableOpacity>
                         </View>
 
-                        {arr.map((name, index) => {
+                        {dataArray.length > 0 ?
+                            <>
+                                {dataArray.map((item, index) => {
 
-                            const category = getCategoryByTitle(name);
+                                    const category = getCategoryByTitle(item.title);
 
-                            return (
-                                <TouchableWithoutFeedback key={index} onLongPress={() => handlePress(category,false)}>
-                                    <View>
-                                        <BudgetProgressCard category={category} title={name}/>
-                                    </View>
-                                </TouchableWithoutFeedback>
-                            )
-                        })}
+                                    return (
+                                        <TouchableWithoutFeedback key={index} onLongPress={() => handlePress(category,false)}>
+                                            <View>
+                                                <BudgetProgressCard data={item} category={category} title={item.title}/>
+                                            </View>
+                                        </TouchableWithoutFeedback>
+                                    )
+                                })}
+                            </>
+                            :
+                            <View className={'h-96 flex-1 justify-center items-center'}>
+                                <Text>wow it's empty</Text>
+                            </View>
+                        }
 
-                        <BudgetCharts/>
+                        {/*<BudgetCharts/>*/}
 
                         {manageCategory && (
                             <OffCanvasModel modalVisible={manageCategory} setModalVisible={setManageCategory}
