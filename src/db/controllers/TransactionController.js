@@ -16,6 +16,9 @@ class TransactionController {
     static async loadTransactionAmounts() {
         return  await DatabaseService.getTransactionAmounts('expense');
     }
+    static async loadAllCategorizedTransactions() {
+        return  await DatabaseService.getGroupedTransactions();
+    }
 
 }
 
