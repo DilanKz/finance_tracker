@@ -17,8 +17,6 @@ const Recent = ({navigate, allTransactions}) => {
             </View>
 
             {allTransactions?.map((item,index) => {
-                console.log(item)
-
                 return (
                     <TransactionCard key={index} item={item} />
                 )
