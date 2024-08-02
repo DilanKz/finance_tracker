@@ -5,9 +5,9 @@ import {FontAwesome, MaterialIcons} from "@expo/vector-icons";
 import {RouteContext} from "../../components/context/routeProvider";
 import {useNavigation} from "@react-navigation/native";
 import Recent from "../../components/home/recent";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import TransactionController from "../../db/controllers/TransactionController";
 import {UserContext} from "../../components/context/userProvider";
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const HomeScreen = () => {
 
@@ -18,6 +18,7 @@ const HomeScreen = () => {
 
     const [allTransactions, setAllTransactions] = useState([]);
     const [dataArr, setDataArr] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     const loadAllTransactions = async () => {
         await TransactionController.loadRecentTransactions().then(res => {
@@ -34,8 +35,10 @@ const HomeScreen = () => {
     }
 
     useEffect(() => {
+        setLoading(true);
         loadDataArray()
         loadAllTransactions()
+        setLoading(false);
     }, [user]);
 
     const navigator = (value) => {
@@ -47,14 +50,6 @@ const HomeScreen = () => {
         <ScrollView className="flex-1 p-4 bg-white">
 
             <View className={'mt-12 w-full py-1 px-1 flex flex-row justify-end items-center'}>
-                {/*<View className={'border p-1 rounded-full'}>
-                    <TouchableOpacity className={'flex items-center justify-center'} onPress={()=>navigator('Profile')}>
-                        <Image
-                            source={require('../../assets/favicon.png')}
-                            className={'w-10 h-10 rounded-full'}
-                        />
-                    </TouchableOpacity>
-                </View>*/}
                 <TouchableOpacity className={'flex items-center justify-center relative'}>
                     <FontAwesome name="bell" size={24} color="#7F39FB"/>
                 </TouchableOpacity>
@@ -94,11 +89,22 @@ const HomeScreen = () => {
             </View>
 
             <Text className={'text-lg font-semibold mt-8'}>Spend Frequency</Text>
-            <MinimalBezierLineChart data={dataArr} />
+            {dataArr.length > 0 ?
+                <MinimalBezierLineChart data={dataArr} /> :
+                <View className={'flex-row justify-center items-center min-h-[100px]'}>
+                    <Text className={'text-center'}>wow it's empty</Text>
+                </View>
+            }
 
             <View className={'mt-8 mb-4'}>
                 <Recent allTransactions={allTransactions} navigate={() => navigator('Transaction')}/>
             </View>
+
+            <Spinner
+                visible={loading}
+                textContent={'Loading...'}
+                textStyle={{ color: '#FFF' }}
+            />
 
         </ScrollView>
     );
