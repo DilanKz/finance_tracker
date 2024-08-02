@@ -40,7 +40,9 @@ const MinimalBezierLineChart = (props) => {
 
 
     useEffect(() => {
-        data.datasets[0].data=props.data
+
+        props.data.length > 0 ? data.datasets[0].data=props.data : data.datasets[0].data=[0,0,0,0,0,0]
+
         console.log('data : ', props.data)
     }, []);
 
