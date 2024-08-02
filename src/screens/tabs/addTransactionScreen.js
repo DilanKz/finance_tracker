@@ -1,10 +1,11 @@
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, TextInput} from 'react-native';
 import {AntDesign, FontAwesome5, MaterialIcons} from "@expo/vector-icons";
 import {useNavigation} from "@react-navigation/native";
 import RNPickerSelect from "react-native-picker-select";
 import TransactionController from "../../db/controllers/TransactionController";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {UserContext} from "../../components/context/userProvider";
 
 const expenseOptions = [
     {label: 'Shopping', value: 'Shopping'},
@@ -23,6 +24,8 @@ const AddTransactionScreen = ({ route }) => {
 
     const navigation = useNavigation()
     const { type } = route.params;
+
+    const { user, setUser } =useContext(UserContext)
 
     const backgroundColor = type === 'income' ? 'bg-emerald-500' : 'bg-rose-500';
 
@@ -56,12 +59,12 @@ const AddTransactionScreen = ({ route }) => {
 
         await TransactionController.addTransaction(transaction).then(async res => {
             if (res.success) {
-                await AsyncStorage.setItem('userData', JSON.stringify(res.data));
-
+                // await AsyncStorage.setItem('userData', JSON.stringify(res.data));
+                setUser(res.data)
             }
         })
 
-        if (!isActive) {
+        if (isActive) {
             setAmount('0')
             setSelectedValue('')
             setDescription('')
