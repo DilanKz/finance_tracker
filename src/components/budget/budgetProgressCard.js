@@ -1,8 +1,12 @@
 import { Text, View } from "react-native";
 import * as Progress from 'react-native-progress';
 import {getCategoryByTitle} from "../../utils/constants";
+import {UserContext} from "../context/userProvider";
+import {useContext} from "react";
 
-export const BudgetProgressCard = ({category}) => {
+export const BudgetProgressCard = ({category, title, data}) => {
+    const { user, setUser } =useContext(UserContext);
+
     return (
         <View className={'p-1 mb-2'}>
             <View style={{
@@ -26,11 +30,11 @@ export const BudgetProgressCard = ({category}) => {
                 </View>
 
                 <Text className='font-semibold mb-2'>
-                    Remaining: 123
+                    Used : {data.totalAmount}
                 </Text>
 
                 <Progress.Bar
-                    progress={100 / 120}
+                    progress={data.totalAmount / user.budget}
                     width={null}
                     color={category.colorHex}
                     borderRadius={10}
