@@ -7,50 +7,41 @@ import {useNavigation} from "@react-navigation/native";
 import Recent from "../../components/home/recent";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import TransactionController from "../../db/controllers/TransactionController";
+import {UserContext} from "../../components/context/userProvider";
 
 const HomeScreen = () => {
 
     const navigation = useNavigation();
-    const {route, setRoute} = useContext(RouteContext);
 
-    const [userObj, setUserObj] = useState({});
+    const {route, setRoute} = useContext(RouteContext);
+    const { user, setUser } =useContext(UserContext)
+
     const [allTransactions, setAllTransactions] = useState([]);
+    const [dataArr, setDataArr] = useState([]);
 
     const loadAllTransactions = async () => {
         await TransactionController.loadRecentTransactions().then(res => {
-            console.log(res)
             setAllTransactions(res.data)
         })
     }
 
+    const loadDataArray = async () => {
+        await TransactionController.loadTransactionAmounts().then(res => {
+            if (res.success) {
+                setDataArr(res.data)
+            }
+        })
+    }
+
     useEffect(() => {
+        loadDataArray()
         loadAllTransactions()
-    }, []);
+    }, [user]);
 
     const navigator = (value) => {
         navigation.navigate(value)
         setRoute(value)
     }
-
-    const getUserData = async () => {
-        try {
-            const userData = await AsyncStorage.getItem('userData');
-            if (userData !== null) {
-                const user = JSON.parse(userData);
-                setUserObj(user)
-
-            } else {
-                console.log('No user data found');
-            }
-        } catch (error) {
-            console.error('Error retrieving user data:', error);
-        }
-    };
-
-
-    useEffect(() => {
-        getUserData()
-    }, []);
 
     return (
         <ScrollView className="flex-1 p-4 bg-white">
@@ -71,7 +62,7 @@ const HomeScreen = () => {
 
             <View className={'mt-4'}>
                 <Text className={'text-center font-semibold text-gray-400 mb-2'}>Current Budget</Text>
-                <Text className={'text-center font-bold text-4xl mb-4'}>LKR {userObj?.budget || 0}</Text>
+                <Text className={'text-center font-bold text-4xl mb-4'}>LKR {user?.budget || 0}</Text>
 
                 <View className={'flex-row justify-center gap-x-3'}>
                     <View className={'bg-emerald-500 flex-row items-center px-2 py-2 rounded-2xl'}>
@@ -83,7 +74,7 @@ const HomeScreen = () => {
 
                         <View className={'ml-4'}>
                             <Text className={'text-white font-semibold '}>Income</Text>
-                            <Text className={'text-white font-semibold text-xl'}>LKR {userObj?.income || 0}</Text>
+                            <Text className={'text-white font-semibold text-xl'}>LKR {user?.income || 0}</Text>
                         </View>
                     </View>
                     <View className={'bg-red-700 flex-row items-center px-2 py-2 rounded-2xl'}>
@@ -95,7 +86,7 @@ const HomeScreen = () => {
 
                         <View className={'ml-4'}>
                             <Text className={'text-white font-semibold '}>Expenses</Text>
-                            <Text className={'text-white font-semibold text-xl'}>LKR {userObj?.expense || 0}</Text>
+                            <Text className={'text-white font-semibold text-xl'}>LKR {user?.expense || 0}</Text>
                         </View>
                     </View>
                 </View>
@@ -103,7 +94,7 @@ const HomeScreen = () => {
             </View>
 
             <Text className={'text-lg font-semibold mt-8'}>Spend Frequency</Text>
-            <MinimalBezierLineChart/>
+            <MinimalBezierLineChart data={dataArr} />
 
             <View className={'mt-8 mb-4'}>
                 <Recent allTransactions={allTransactions} navigate={() => navigator('Transaction')}/>
