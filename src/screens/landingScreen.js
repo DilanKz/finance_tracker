@@ -1,5 +1,5 @@
 // ** React Imports
-import React, {useEffect} from "react";
+import React, {useContext, useEffect} from "react";
 
 // Expo Imports
 import {StatusBar} from "expo-status-bar";
@@ -9,8 +9,11 @@ import {Image, View} from "react-native";
 import UserController from "../db/controllers/UserController";
 import DatabaseService from "../db/services/DatabaseService";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {UserContext} from "../components/context/userProvider";
 
 export default function LandingScreen({navigation}) {
+
+    const { user, setUser } =useContext(UserContext)
 
     useEffect(() => {
         const initializeStorage = async () => {
@@ -26,7 +29,8 @@ export default function LandingScreen({navigation}) {
 
             UserController.isStorageInitialized().then(async res => {
                 if (res.success) {
-                    await AsyncStorage.setItem('userData', JSON.stringify(res.data));
+                    setUser(res.data)
+                    // await AsyncStorage.setItem('userData', JSON.stringify(res.data));
                     navigation.navigate('main');
                 } else {
                     navigation.navigate('onBoard');
