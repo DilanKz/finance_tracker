@@ -6,11 +6,17 @@ import RNPickerSelect from "react-native-picker-select";
 import TransactionController from "../../db/controllers/TransactionController";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {UserContext} from "../../components/context/userProvider";
+import Spinner from "react-native-loading-spinner-overlay";
+import { useToast } from 'react-native-toast-notifications';
+
 
 const expenseOptions = [
     {label: 'Shopping', value: 'Shopping'},
     {label: 'Health', value: 'Health'},
+    {label: 'Food', value: 'Food'},
+    {label: 'Transportation', value: 'Transportation'},
     {label: 'Travel', value: 'Travel'},
+    {label: 'Bills', value: 'Bills'},
     {label: 'Entertainment', value: 'Entertainment'},
     {label: 'Others', value: 'Others'},
 ];
@@ -25,6 +31,8 @@ const AddTransactionScreen = ({ route }) => {
     const navigation = useNavigation()
     const { type } = route.params;
 
+    const toast = useToast();
+
     const { user, setUser } =useContext(UserContext)
 
     const backgroundColor = type === 'income' ? 'bg-emerald-500' : 'bg-rose-500';
@@ -33,6 +41,7 @@ const AddTransactionScreen = ({ route }) => {
     const [selectedValue, setSelectedValue] = useState('');
     const [description, setDescription] = useState('');
     const [isActive, setIsActive] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const toggleButton = () => {
         setIsActive(!isActive);
@@ -45,7 +54,7 @@ const AddTransactionScreen = ({ route }) => {
     };
 
     const onButtonPress = async () => {
-
+        setLoading(true);
         const transaction = {
             id: Date.now().toString(),
             amount: amount,
@@ -58,9 +67,12 @@ const AddTransactionScreen = ({ route }) => {
         console.log(transaction)
 
         await TransactionController.addTransaction(transaction).then(async res => {
+            setLoading(false);
             if (res.success) {
-                // await AsyncStorage.setItem('userData', JSON.stringify(res.data));
                 setUser(res.data)
+                toast.show('Transaction added successfully', { type: 'success' });
+            } else {
+                toast.show('Failed to add transaction', { type: 'danger' });
             }
         })
 
@@ -152,6 +164,12 @@ const AddTransactionScreen = ({ route }) => {
                     </TouchableOpacity>
                 </View>
             </View>
+
+            <Spinner
+                visible={loading}
+                textContent={'Loading...'}
+                textStyle={{ color: '#FFF' }}
+            />
 
         </View>
     );
