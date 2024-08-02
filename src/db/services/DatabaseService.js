@@ -196,6 +196,69 @@ class DatabaseService {
             return { success: false, error: error.message };
         }
     }
+
+    static async getTransactionAmounts(type) {
+        try {
+            // Create a reference to the transactions collection
+            const transactionsRef = collection(db, 'transactions');
+
+            // Create a query to filter transactions by type
+            const q = type ? query(transactionsRef, where('type', '==', type)) : query(transactionsRef);
+
+            // Fetch the transactions
+            const transactionsSnapshot = await getDocs(q);
+
+            // Extract transaction amounts
+            const amounts = transactionsSnapshot.docs.map(doc => {
+                const data = doc.data();
+                return parseFloat(data.amount) || 0;
+            });
+
+            return { success: true, data: amounts };
+        } catch (error) {
+            console.error('Error getting transaction amounts:', error);
+            return { success: false, error: error.message };
+        }
+    }
+
+    static async getGroupedTransactions() {
+        try {
+            // Create a reference to the transactions collection
+            const transactionsRef = collection(db, 'transactions');
+
+            // Fetch all transactions
+            const transactionsSnapshot = await getDocs(transactionsRef);
+
+            // Initialize a map to hold the grouped data
+            const groupedTransactions = {};
+
+            // Iterate over each transaction
+            transactionsSnapshot.docs.forEach(doc => {
+                const data = doc.data();
+                const title = data.breakdownTitle;
+                const amount = parseFloat(data.amount) || 0;
+
+                if (!groupedTransactions[title]) {
+                    groupedTransactions[title] = { type: data.type, amount: 0 };
+                }
+
+                // Sum the amounts for each group
+                groupedTransactions[title].amount += amount;
+            });
+
+            // Convert the grouped data to an array of objects
+            const groupedArray = Object.keys(groupedTransactions).map(title => ({
+                breakdownTitle: title,
+                type: groupedTransactions[title].type,
+                amount: groupedTransactions[title].amount
+            }));
+
+            return { success: true, data: groupedArray };
+        } catch (error) {
+            console.error('Error getting grouped transactions:', error);
+            return { success: false, error: error.message };
+        }
+    }
 }
 
 export default DatabaseService;
