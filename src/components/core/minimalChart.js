@@ -1,6 +1,7 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Text, View, Dimensions, TouchableOpacity} from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import TransactionController from "../../db/controllers/TransactionController";
 
 const { width } = Dimensions.get('window');
 
@@ -8,7 +9,7 @@ const data = {
     labels: [],
     datasets: [
         {
-            data: [20, 45, 28, 80, 99, 43, 50],
+            data: [0,0,0,0,0,0,0,0],
             color: (opacity = 1) => `rgba(127, 61, 255, 0.7)`,
             strokeWidth: 5,
         },
@@ -29,13 +30,19 @@ const chartConfig = {
 
 };
 
-const MinimalBezierLineChart = () => {
+const MinimalBezierLineChart = (props) => {
 
     const [filer, setFiler] = useState('today');
 
     const setFilterValue = (value) => {
         setFiler(value)
     }
+
+
+    useEffect(() => {
+        data.datasets[0].data=props.data
+        console.log('data : ', props.data)
+    }, []);
 
     return (
         <View style={{ alignItems: 'center', justifyContent: 'center', flex: 1, backgroundColor: 'white' }}>
@@ -60,7 +67,7 @@ const MinimalBezierLineChart = () => {
                     marginBottom:0
                 }}
             />
-            <View className={'w-full flex-row flex-1 -mt-8 justify-evenly'}>
+            {/*<View className={'w-full flex-row flex-1 -mt-8 justify-evenly'}>
                 <TouchableOpacity className={`${filer === 'today' ? 'bg-amber-100' : ''} rounded-xl px-3 `} onPress={()=>setFilterValue('today')}>
                     <Text className={`${filer === 'today' ? 'text-amber-500' : 'text-gray-400'} font-semibold text-lg`}>Today</Text>
                 </TouchableOpacity>
@@ -73,7 +80,7 @@ const MinimalBezierLineChart = () => {
                 <TouchableOpacity className={`${filer === 'year' ? 'bg-amber-100' : ''} rounded-xl px-3 `} onPress={()=>setFilterValue('year')}>
                     <Text className={`${filer === 'year' ? 'text-amber-500' : 'text-gray-400'} font-semibold text-lg`}>Year</Text>
                 </TouchableOpacity>
-            </View>
+            </View>*/}
         </View>
     );
 }
