@@ -152,10 +152,10 @@ const BudgetScreen = () => {
 
                                         let dot = ''
 
-                                        if (arr.includes(category.title)) {
+                                        /*if (arr.includes(category.title)) {
                                             dot = <View
                                                 className={'absolute bg-green-500 p-1 rounded-full right-0 -top-0.5'}></View>
-                                        }
+                                        }*/
 
                                         return (
                                             <TouchableOpacity key={index} onPress={() => handlePress(category, dot === '')}>
@@ -177,6 +177,19 @@ const BudgetScreen = () => {
                             <OffCanvasModel modalVisible={editBudget} setModalVisible={setEditBudget} height={250}>
                                 <View className="mb-16">
                                     <Text className={'text-lg font-semibold'}>Edit Your Budget</Text>
+                                </View>
+                                <View className={'flex-1'}>
+                                    <View className={'flex-row border border-gray-200 p-2 rounded-xl'}>
+                                        <TextInput
+                                            placeholder={'Name'}
+                                            className={'text-lg flex-1'}
+                                        />
+                                    </View>
+                                    <View className={'flex-row border border-gray-200 mb-4 rounded-xl'}>
+                                        <TouchableOpacity className={'w-full flex items-center py-4 bg-customPurple rounded-xl mb-4'}>
+                                            <Text className={'text-xl text-gray-100'}>Let’s go</Text>
+                                        </TouchableOpacity>
+                                    </View>
                                 </View>
                             </OffCanvasModel>
                         )}
